@@ -1,0 +1,97 @@
+package modelo.enums;
+
+public enum MenuEnum {
+
+    /* ======================
+       GENERAL
+       ====================== */
+
+    SALIR("Salir"),
+
+    /* ======================
+       BASE DE DATOS XML (BaseX)
+       ====================== */
+
+    MODIFICAR_VALOR_XML(
+            "Modificar el valor de un elemento de un XML según un ID"),
+
+    ELIMINAR_PRODUCTO(
+            "Eliminar un producto según su ID"),
+
+    OBTENER_POR_ORDEN_ALFABETICO(
+            "Obtener todos los productos por orden alfabético del nombre"),
+
+    LISTAR_DISPONIBILIDAD_MAYOR_A_X(
+            "Listar productos con una disponibilidad mayor a X unidades"),
+
+    MOSTRAR_MAS_CARO_POR_CATEGORIA(
+            "Mostrar la categoría, el nombre y el precio del producto más caro para cada categoría"),
+
+    BUSCAR_POR_DESCRIPCION(
+            "Mostrar productos cuya descripción incluya una subcadena, ordenados por fabricante descendente"),
+
+    MOSTRAR_TOTAL_PRODUCTOS_POR_CATEGORIA(
+            "Mostrar la cantidad total de productos por categoría y su porcentaje"),
+
+    /* ======================
+       BASE DE DATOS MONGODB
+       ====================== */
+
+    CREAR_CLIENTE(
+            "Crear un nuevo cliente"),
+
+    IDENTIFICAR_CLIENTE(
+            "Identificar cliente por email"),
+
+    BORRAR_CLIENTE(
+            "Borrar cliente"),
+
+    MODIFICAR_CLIENTE(
+            "Modificar datos del cliente"),
+
+    AÑADIR_PRODUCTO_CARRITO(
+            "Añadir producto al carrito"),
+
+    MOSTRAR_CARRITO(
+            "Mostrar carrito del cliente"),
+
+    MOSTRAR_PEDIDOS(
+            "Mostrar pedidos del cliente"),
+
+    PAGAR_CARRITO(
+            "Pagar carrito del cliente"),
+
+    CONSULTA_TOTAL_CARRITOS(
+            "Calcular el total de cada carrito y listarlos ordenados"),
+
+    CONSULTA_TOTAL_GASTADO_CLIENTES(
+            "Obtener el total gastado por cada cliente");
+
+    /* ======================
+       TEXTO
+       ====================== */
+
+    private final String texto;
+
+    MenuEnum(String texto) {
+        this.texto = texto;
+    }
+
+    public String getTexto() {
+        return texto;
+    }
+
+    /* ======================
+       UTILIDAD
+       ====================== */
+
+    public static MenuEnum fromOpcion(int opcion) {
+        MenuEnum[] valores = MenuEnum.values();
+
+        if (opcion < 0 || opcion >= valores.length) {
+            return null;
+        }
+        return valores[opcion];
+    }
+}
+

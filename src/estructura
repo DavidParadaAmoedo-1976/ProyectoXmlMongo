@@ -1,0 +1,24 @@
+java
+    -controlador
+        ProgramaControlador
+    -dao
+        -mongo
+            ConexionMongo
+            TiendaMongoDAO
+        -xml
+            ProductoXMLDAO
+    -modelo
+        -entidades
+            Cliente
+            ItemCarrito
+            Pedido
+            Producto
+        -enums
+            MenuEnum
+    -servicio
+        TiendaService
+    -utilidades
+        MongoMapper
+    -vista
+        ProgramaVista
+    Programa

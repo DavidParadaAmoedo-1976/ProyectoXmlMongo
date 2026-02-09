@@ -1,0 +1,135 @@
+package controlador;
+
+import modelo.enums.MenuEnum;
+import servicio.TiendaService;
+import vista.ProgramaVista;
+
+public class ProgramaControlador {
+
+    private final ProgramaVista vista;
+    private final TiendaService servicio;
+    private boolean salir;
+
+    public ProgramaControlador() {
+        this.vista = new ProgramaVista();
+        this.servicio = new TiendaService();
+        this.salir = false;
+    }
+
+    public void iniciar() {
+
+        while (!salir) {
+            vista.mostrarMenu();
+            int opcion = vista.pedirOpcion();
+
+            MenuEnum menu = MenuEnum.fromOpcion(opcion);
+
+            if (menu == null) {
+                vista.mostrarMensaje("Opción no válida");
+                continue;
+            }
+
+            try {
+                ejecutarOpcion(menu);
+            } catch (Exception e) {
+                vista.mostrarMensaje("ERROR: " + e.getMessage());
+            }
+        }
+    }
+
+    private void ejecutarOpcion(MenuEnum opcion) {
+
+        switch (opcion) {
+
+            case SALIR -> salir = true;
+
+            /* ======================
+               XML / BASEX
+               ====================== */
+
+            case MODIFICAR_PRODUCTO -> {
+                String id = vista.pedirTexto("ID del producto");
+                String campo = vista.pedirTexto("Elemento a modificar");
+                String valor = vista.pedirTexto("Nuevo valor");
+                vista.modificarProductoXML(id, campo, valor);
+            }
+
+            case ELIMINAR_PRODUCTO -> {
+                String id = vista.pedirTexto("ID del producto");
+                vista.eliminarProductoXML(id);
+            }
+
+            case XML_CONSULTA_1 -> vista.mostrarConsultaXML(1);
+            case XML_CONSULTA_2 -> vista.mostrarConsultaXML(2);
+            case XML_CONSULTA_3 -> vista.mostrarConsultaXML(3);
+            case XML_CONSULTA_4 -> vista.mostrarConsultaXML(4);
+            case XML_CONSULTA_5 -> vista.mostrarConsultaXML(5);
+
+            /* ======================
+               MONGO
+               ====================== */
+
+            case CREAR_CLIENTE -> {
+                String nombre = vista.pedirTexto("Nombre");
+                String email = vista.pedirTexto("Email");
+
+                if (servicio.crearCliente(nombre, email)) {
+                    vista.mostrarMensaje("Cliente creado correctamente");
+                } else {
+                    vista.mostrarMensaje("El email ya existe");
+                }
+            }
+
+            case IDENTIFICAR_CLIENTE -> {
+                String email = vista.pedirTexto("Email");
+
+                if (servicio.identificarCliente(email)) {
+                    vista.mostrarMensaje("Cliente identificado");
+                } else {
+                    vista.mostrarMensaje("Cliente no encontrado");
+                }
+            }
+
+            case BORRAR_CLIENTE -> {
+                servicio.borrarClienteActual();
+                vista.mostrarMensaje("Cliente eliminado");
+            }
+
+            case MODIFICAR_CLIENTE -> {
+                String campo = vista.pedirTexto("Campo a modificar");
+                String valor = vista.pedirTexto("Nuevo valor");
+                servicio.modificarCliente(campo, valor);
+                vista.mostrarMensaje("Cliente modificado");
+            }
+
+            case AÑADIR_CARRITO -> {
+                String idProducto = vista.pedirTexto("ID producto");
+                double precio = vista.pedirDouble("Precio unitario");
+                int cantidad = vista.pedirEntero("Cantidad");
+
+                servicio.añadirProductoCarrito(idProducto, precio, cantidad);
+                vista.mostrarMensaje("Producto añadido al carrito");
+            }
+
+            case MOSTRAR_CARRITO -> {
+                vista.mostrarCarrito(servicio.obtenerCarrito(),
+                        servicio.calcularTotalCarrito());
+            }
+
+            case MOSTRAR_PEDIDOS -> {
+                vista.mostrarPedidos(servicio.obtenerPedidos());
+            }
+
+            case PAGAR_CARRITO -> {
+                if (vista.confirmar("¿Confirmar pago?")) {
+                    servicio.pagarCarrito();
+                    vista.mostrarMensaje("Pedido realizado correctamente");
+                }
+            }
+
+            case MONGO_CONSULTA_1 -> servicio.consultaTotalCarritos();
+            case MONGO_CONSULTA_2 -> servicio.consultaTotalGastadoClientes();
+        }
+    }
+}
+
